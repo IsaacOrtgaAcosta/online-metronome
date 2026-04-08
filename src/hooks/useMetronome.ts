@@ -5,24 +5,33 @@ export const useMetronome = () => {
   const [bpm, setBpm] = useState(120);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const clickAudioRef = useRef<HTMLAudioElement | null>(null);
+  const accentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const currentBeatRef = useRef(0);
 
+  const beatsPerBar = 4;
   const interval = (60 / bpm) * 1000;
 
   useEffect(() => {
-    audioRef.current = new Audio('/bark.wav')
-  }
-)
+    clickAudioRef.current = new Audio("/bark.wav");
+    accentAudioRef.current = new Audio("/cat.wav");
+  }, []);
 
   const tick = () => {
-    if(!audioRef.current) return;
+    const isAccent = currentBeatRef.current === 0;
+    const audio = isAccent ? accentAudioRef.current : clickAudioRef.current;
 
-    audioRef.current.currentTime = 0;
-    audioRef.current.play();
+    if(audio) {
+        audio.currentTime = 0;
+        void audio.play();
+    }
+
+    currentBeatRef.current = (currentBeatRef.current + 1) % beatsPerBar;
   };
 
   const start = () => {
     if (intervalRef.current) return;
+    currentBeatRef.current = 0;
     tick();
     intervalRef.current = setInterval(tick, interval);
     setIsPlaying(true);
@@ -33,15 +42,28 @@ export const useMetronome = () => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+
+    currentBeatRef.current = 0;
     setIsPlaying(false);
   };
 
-  useEffect(() => {
-    if (isPlaying) {
-      stop();
-      start();
-    }
-  }, [bpm]);
 
+  useEffect(() => {
+    if(!isPlaying) return;
+
+    if(intervalRef.current){
+        clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(tick, interval);
+
+
+    return () => {
+        if (intervalRef.current){
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    };
+  }, [bpm, isPlaying, interval])
   return { isPlaying, bpm, setBpm, start, stop };
 };
