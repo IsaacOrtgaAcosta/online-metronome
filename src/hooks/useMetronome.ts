@@ -1,40 +1,38 @@
-import { constants } from "buffer";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 
-const useMetronome = () => {
-const [isPlaying, setIsPlaying] = useState(false);
-const [bpm, setBpm] = useState(120);
+export const useMetronome = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [bpm, setBpm] = useState(120);
 
-const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-const interval = (60 / bpm) * 1000;
+  const interval = (60 / bpm) * 1000;
 
-const tick = () => {
-    console.log('tick');
-}
+  const tick = () => {
+    console.log("tick");
+  };
 
-const start = () => {
+  const start = () => {
     if (intervalRef.current) return;
 
     intervalRef.current = setInterval(tick, interval);
     setIsPlaying(true);
-};
+  };
 
-const stop = () => {
-    if(intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+  const stop = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
     setIsPlaying(false);
-}
+  };
 
-useEffect(() => {
-    if(isPlaying) {
-        stop();
-        start();
+  useEffect(() => {
+    if (isPlaying) {
+      stop();
+      start();
     }
-}, [bpm]);
+  }, [bpm]);
 
-return {isPlaying, bpm, setBpm, start, stop};
-
-} 
+  return { isPlaying, bpm, setBpm, start, stop };
+};
