@@ -1,40 +1,47 @@
-import { constants } from "buffer";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 
-const useMetronome = () => {
-const [isPlaying, setIsPlaying] = useState(false);
-const [bpm, setBpm] = useState(120);
+export const useMetronome = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [bpm, setBpm] = useState(120);
 
-const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-const interval = (60 / bpm) * 1000;
+  const interval = (60 / bpm) * 1000;
 
-const tick = () => {
-    console.log('tick');
-}
+  useEffect(() => {
+    audioRef.current = new Audio('/bark.wav')
+  }
+)
 
-const start = () => {
+  const tick = () => {
+    if(!audioRef.current) return;
+
+    audioRef.current.currentTime = 0;
+    audioRef.current.play();
+  };
+
+  const start = () => {
     if (intervalRef.current) return;
-
+    tick();
     intervalRef.current = setInterval(tick, interval);
     setIsPlaying(true);
-};
+  };
 
-const stop = () => {
-    if(intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+  const stop = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
     setIsPlaying(false);
-}
+  };
 
-useEffect(() => {
-    if(isPlaying) {
-        stop();
-        start();
+  useEffect(() => {
+    if (isPlaying) {
+      stop();
+      start();
     }
-}, [bpm]);
+  }, [bpm]);
 
-return {isPlaying, bpm, setBpm, start, stop};
-
-} 
+  return { isPlaying, bpm, setBpm, start, stop };
+};
