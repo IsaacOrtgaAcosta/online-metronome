@@ -5,16 +5,25 @@ export const useMetronome = () => {
   const [bpm, setBpm] = useState(120);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const interval = (60 / bpm) * 1000;
 
+  useEffect(() => {
+    audioRef.current = new Audio('/bark.wav')
+  }
+)
+
   const tick = () => {
-    console.log("tick");
+    if(!audioRef.current) return;
+
+    audioRef.current.currentTime = 0;
+    audioRef.current.play();
   };
 
   const start = () => {
     if (intervalRef.current) return;
-
+    tick();
     intervalRef.current = setInterval(tick, interval);
     setIsPlaying(true);
   };
