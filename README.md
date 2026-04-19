@@ -14,7 +14,7 @@ A simple, responsive, and lightweight **online metronome** built with **Next.js 
 
 ## 🌐 Live Demo
 
-👉 https://isaacortga-slowmetronome.netlify.app/
+👉 https://ultrametronome.netlify.app/
 
 ---
 
