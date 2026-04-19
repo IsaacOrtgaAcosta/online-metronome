@@ -8,7 +8,7 @@ export default function Metronome() {
   return (
     <div className="flex flex-col items-center justify-center gap-y-10 w-full min-h-screen">
       <h2 className="text-4xl font-bold tracking-wide mb-15">
-        Slow Animal Metronome
+        Ultra Metronome Online
       </h2>
 
       <p className="text-2xl font-semibold -tracking-tighter">BPM: {bpm}</p>
@@ -16,8 +16,8 @@ export default function Metronome() {
       <input
         className="cursor-pointer w-90"
         type="range"
-        min="40"
-        max="120"
+        min="20"
+        max="300"
         value={bpm}
         onChange={(e) => setBpm(Number(e.target.value))}
       />

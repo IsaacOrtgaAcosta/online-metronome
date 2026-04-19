@@ -13,8 +13,8 @@ export const useMetronome = () => {
   const interval = (60 / bpm) * 1000;
 
   useEffect(() => {
-    clickAudioRef.current = new Audio("/bark.wav");
-    accentAudioRef.current = new Audio("/cat.wav");
+    clickAudioRef.current = new Audio("/tick.mp3");
+    accentAudioRef.current = new Audio("/tack.mp3");
   }, []);
 
   const tick = () => {
