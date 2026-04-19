@@ -16,8 +16,8 @@ export default function Metronome() {
       <input
         className="cursor-pointer w-90"
         type="range"
-        min="40"
-        max="120"
+        min="20"
+        max="300"
         value={bpm}
         onChange={(e) => setBpm(Number(e.target.value))}
       />
